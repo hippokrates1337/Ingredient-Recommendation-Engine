@@ -14,10 +14,11 @@
 </script>
 
 <script>
-	export const prerender = true;
-
 	import AddIngredient from "$lib/AddIngredient.svelte"
 	import IngredientQuery from "$lib/IngredientQuery.svelte"
+	import IngredientRecommendations from "$lib/IngredientRecommendations.svelte"
+
+	export const prerender = true;
 
 	export let recommendations = ""
 	let ingredients = []
@@ -34,5 +35,5 @@
 <main>
 	<AddIngredient on:add={e => addIngredient(e.detail)} />
 	<IngredientQuery {ingredients} />
-	<p>Recommendations: {recommendations}</p>
+	<IngredientRecommendations {recommendations} algorithm="popularity" />
 </main>
