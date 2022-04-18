@@ -29,16 +29,7 @@ if(process.env["NODE_ENV"] === "development") {
 
 export default clientPromise
 
-export const retrievePopularIngredients = async () => {
-    const dbConnection = await clientPromise
-    const db = await dbConnection.db()
-    const collection = await db.collection("recipes_ingredients")
-    let recipes = await collection.find({}).toArray()
-
-    if(recipes.length === 0) {
-        return {status: 500, body: {}}
-    }
-
+const countIngredients = (recipes) => {
     // Create a list of unique ingredients with their frequency
     let ingredients = {}
     for(const r of recipes) {
@@ -60,8 +51,39 @@ export const retrievePopularIngredients = async () => {
         return a[1] < b[1] ? 1 : -1
     })
 
+    return frequencies
+}
+
+export const retrievePopularIngredients = async () => {
+    const dbConnection = await clientPromise
+    const db = await dbConnection.db()
+    const collection = await db.collection("recipes_ingredients")
+    let recipes = await collection.find({}).toArray()
+
+    if(recipes.length === 0) {
+        return {status: 500, body: {}}
+    }
+
     return {
         status: 200,
-        body: {result: frequencies.slice(0, 10)}
+        body: {result: countIngredients(recipes).slice(0, 10)}
+    }
+}
+
+export const retrievePopularRecommendations = async (query) => {
+    let ingredients = query.split("+")
+    
+    const dbConnection = await clientPromise
+    const db = await dbConnection.db()
+    const collection = await db.collection("recipes_ingredients")
+    let recipes = await collection.find({ingredients: {$all: ingredients}}).toArray()
+
+    // Remove the query ingredients from the returned recommendations
+    let recommendations = countIngredients(recipes)
+    recommendations = recommendations.filter(r => !ingredients.includes(r[0]))
+
+    return {
+        status: 200,
+        body: {result: recommendations}
     }
 }

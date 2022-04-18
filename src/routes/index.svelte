@@ -25,6 +25,13 @@
 
 	const addIngredient = async (ingredient) => {
 		ingredients = [...ingredients, ingredient]
+
+		let query = "/recommendations/" + ingredients.join("+")
+		const res = await fetch(query)
+		if(res.ok) {
+			const data = await res.json()
+			recommendations = data.result
+		}
 	}
 </script>
 
