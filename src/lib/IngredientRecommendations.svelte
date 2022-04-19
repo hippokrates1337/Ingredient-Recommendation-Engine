@@ -4,12 +4,12 @@
 </script>
 
 <div>
-    <label for="list_ingredientrecs" id="label_ingredientrecs">
+    <label class="h6 text-primary mb-2" for="list_ingredientrecs" id="label_ingredientrecs">
         Recommended ingredients based on {algorithm}:
     </label>
-    <ul role="list" id="list_ingredientrecs" aria-labelledby="label_ingredientrecs">
+    <ul class="list-group" role="list" id="list_ingredientrecs" aria-labelledby="label_ingredientrecs">
         {#each recommendations as rec}
-            <li>
+            <li class="list-group-item list-group-item-info list-group-item-action">
                 {rec[0]}
             </li>
         {/each}
