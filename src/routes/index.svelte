@@ -23,15 +23,23 @@
 	export let recommendations = ""
 	let ingredients = []
 
-	const addIngredient = async (ingredient) => {
-		ingredients = [...ingredients, ingredient]
-
+	const updateIngredients = async () => {
 		let query = "/recommendations/" + ingredients.join("+")
 		const res = await fetch(query)
 		if(res.ok) {
 			const data = await res.json()
 			recommendations = data.result
 		}
+	}
+
+	const addIngredient = async (ingredient) => {
+		ingredients = [...ingredients, ingredient]
+		await updateIngredients()
+	}
+
+	const removeIngredient = async (ingredient) => {
+		ingredients = ingredients.filter(i => i != ingredient)
+		await updateIngredients()
 	}
 </script>
 
@@ -49,7 +57,7 @@
 		<div class="row">
 			<div class="col-md-4">
 				<AddIngredient on:add={e => addIngredient(e.detail)} />
-				<IngredientQuery {ingredients} />	
+				<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />	
 			</div>
 			<div class="col-md-8">
 				<IngredientRecommendations {recommendations} algorithm="popularity" />

@@ -78,6 +78,6 @@ export const retrievePopularRecommendations = async (query) => {
 
     return {
         status: 200,
-        body: {result: recommendations}
+        body: {result: recommendations.slice(0, 10)}
     }
 }
