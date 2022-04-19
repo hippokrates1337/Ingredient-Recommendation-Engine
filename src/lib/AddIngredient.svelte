@@ -10,12 +10,14 @@
     }
 </script>
 
-<div>
-    <form on:submit|preventDefault={onAdd}>
-        <label for="input_addingredient" id="label_addingredient">
+<form on:submit|preventDefault={onAdd}>
+    <div class="form-floating">
+        <input type="text" class="form-control" autocomplete="off" bind:value={ingredient} id="input_addingredient" />
+        <label class="form-label" for="input_addingredient" id="label_addingredient">
             Add an ingredient to your selection:
         </label>
-        <input bind:value={ingredient} type="text" autocomplete="off" id="input_addingredient" />
-        <button type="submit">Add</button>
-    </form>
-</div>
+    </div>
+    <div class="d-grid mt-1">
+        <button class="btn btn-primary btn-block" type="submit">Add</button>
+    </div>
+</form>

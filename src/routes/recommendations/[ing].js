@@ -1,5 +1,5 @@
 import {api} from "./_api"
 
-export async function get({params}) {
-    return api({method: "GET"}, params.ing)
+export async function get(request) {
+    return api(request)
 }

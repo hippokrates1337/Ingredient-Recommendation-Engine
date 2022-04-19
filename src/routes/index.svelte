@@ -40,7 +40,21 @@
 </svelte:head>
 
 <main>
-	<AddIngredient on:add={e => addIngredient(e.detail)} />
-	<IngredientQuery {ingredients} />
-	<IngredientRecommendations {recommendations} algorithm="popularity" />
+	<div class="container p-4 bg-primary text-white text-center">
+		<h1>Ingredient Recommendation Engine</h1>
+		<p>Get ingredient recommendations based on what combinations other people make. 
+			Enter ingredients below and see what kind of foods are often used together. </p>
+	</div>
+	<div class="container bg-light p-3 border border-primary">
+		<div class="row">
+			<div class="col-md-4">
+				<AddIngredient on:add={e => addIngredient(e.detail)} />
+				<IngredientQuery {ingredients} />	
+			</div>
+			<div class="col-md-8">
+				<IngredientRecommendations {recommendations} algorithm="popularity" />
+				<IngredientRecommendations {recommendations} algorithm="similar recipes (DUMMY)" />
+			</div>			
+		</div>
+	</div>
 </main>
