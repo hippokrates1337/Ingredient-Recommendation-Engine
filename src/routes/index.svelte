@@ -60,8 +60,8 @@
 				<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />	
 			</div>
 			<div class="col-md-8">
-				<IngredientRecommendations {recommendations} algorithm="popularity" />
-				<IngredientRecommendations {recommendations} algorithm="similar recipes (DUMMY)" />
+				<IngredientRecommendations {recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />
+				<IngredientRecommendations {recommendations} algorithm="similar recipes (DUMMY)" on:add={e => addIngredient(e.detail)} />
 			</div>			
 		</div>
 	</div>
