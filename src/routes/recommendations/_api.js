@@ -1,4 +1,4 @@
-import {retrievePopularIngredients, retrievePopularRecommendations} from "$lib/database"
+import {retrieveNNRecommendations, retrievePopularIngredients, retrievePopularRecommendations} from "$lib/database"
 
 export const api = async (request) => {
     let status = 500
@@ -9,6 +9,7 @@ export const api = async (request) => {
             let response
             if(request.params.ing) {
                 response = await retrievePopularRecommendations(request.params.ing)
+                await retrieveNNRecommendations(request.params.ing)
             } else {
                 response = await retrievePopularIngredients()
             }

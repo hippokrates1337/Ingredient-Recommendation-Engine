@@ -81,3 +81,23 @@ export const retrievePopularRecommendations = async (query) => {
         body: {result: recommendations.slice(0, 10)}
     }
 }
+
+export const retrieveNNRecommendations = async (query) => {
+    let ingredients = query.split("+")
+
+    const dbConnection = await clientPromise
+    const db = await dbConnection.db()
+    const collection = await db.collection("recipes_ingredients")
+    let recipes = await collection.find({ingredients: {$all: ingredients}}).toArray()
+
+    // If there is no recipe that has this combination of ingredients, randomly remove an ingredient and try again
+    let idx = ingredients.length - 1
+    while(recipes.length == 0 && idx > 0) {
+        console.log("Trying with less ingredients")
+        recipes = await collection.find({ingredients: {$all: ingredients.slice(0, idx)}}).toArray()
+        idx--
+    }
+
+    console.log(recipes.slice(0,1))
+
+}
