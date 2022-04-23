@@ -76,10 +76,7 @@ export const retrievePopularRecommendations = async (query) => {
     let recommendations = countIngredients(recipes)
     recommendations = recommendations.filter(r => !ingredients.includes(r[0]))
 
-    return {
-        status: 200,
-        body: {result: recommendations.slice(0, 10)}
-    }
+    return recommendations.slice(0, 10)
 }
 
 export const retrieveNNRecommendations = async (query) => {
@@ -98,6 +95,23 @@ export const retrieveNNRecommendations = async (query) => {
         idx--
     }
 
-    console.log(recipes.slice(0,1))
+    // Pick a random recipe and retrieve similar recipes to this one
+    let recipe_ids = recipes[Math.floor(Math.random() * recipes.length)]["similar_recipes"]
+    recipes = await collection.find({id: {$in: recipe_ids}}).toArray()
+    
+    // Remove the query ingredients from the returned recommendations
+    let recommendations = countIngredients(recipes)
+    recommendations = recommendations.filter(r => !ingredients.includes(r[0]))
 
+    return recommendations.slice(0, 10)
+}
+
+export const retrieveRecommendations = async (query) => {
+    let rec_1 = await retrievePopularRecommendations(query)
+    let rec_2 = await retrieveNNRecommendations(query)
+    
+    return {
+        status: 200,
+        body: {rec_popular: rec_1, rec_nn: rec_2}
+    }
 }

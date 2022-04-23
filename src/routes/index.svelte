@@ -20,7 +20,8 @@
 
 	export const prerender = true;
 
-	export let recommendations = ""
+	export let popular_recommendations = ""
+	export let nn_recommendations = ""
 	let ingredients = []
 
 	const updateIngredients = async () => {
@@ -28,7 +29,8 @@
 		const res = await fetch(query)
 		if(res.ok) {
 			const data = await res.json()
-			recommendations = data.result
+			popular_recommendations = data.rec_popular
+			nn_recommendations = data.rec_nn
 		}
 	}
 
@@ -60,8 +62,8 @@
 				<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />	
 			</div>
 			<div class="col-md-8">
-				<IngredientRecommendations {recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />
-				<IngredientRecommendations {recommendations} algorithm="similar recipes (DUMMY)" on:add={e => addIngredient(e.detail)} />
+				<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />
+				<IngredientRecommendations recommendations={nn_recommendations} algorithm="similar recipes" on:add={e => addIngredient(e.detail)} />
 			</div>			
 		</div>
 	</div>
