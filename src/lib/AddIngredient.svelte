@@ -12,7 +12,7 @@
 
 <form on:submit|preventDefault={onAdd}>
     <div class="form-floating">
-        <input type="text" class="form-control" autocomplete="off" bind:value={ingredient} id="input_addingredient" />
+        <input type="text" class="form-control" autocomplete="off" bind:value={ingredient} id="input_addingredient" placeholder="Zimt" />
         <label class="form-label" for="input_addingredient" id="label_addingredient">
             Add an ingredient to your selection:
         </label>
