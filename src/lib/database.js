@@ -60,7 +60,7 @@ export const retrievePopularIngredients = async () => {
 
     return {
         status: 200,
-        body: {result: countIngredients(recipes).slice(0, 10)}
+        body: {rec_popular: countIngredients(recipes).slice(0, 10), rec_nn: []}
     }
 }
 

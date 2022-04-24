@@ -2,8 +2,8 @@
     import {createEventDispatcher} from "svelte"
     const dispatch = createEventDispatcher()
 
-    export let recommendations
-    export let algorithm
+    export let recommendations = []
+    export let algorithm = ""
 
     const addIngredient = (rec) => {
         dispatch("add", rec)
@@ -14,6 +14,13 @@
     <label class="h6 text-primary mb-2" for="list_ingredientrecs" id="label_ingredientrecs">
         Recommended ingredients based on {algorithm}:
     </label>
+    {#if recommendations.length == 0}
+        <p class="text-warning">There are no recommendations matching your query. 
+            Possible reasons: you specified ingredients that don't exist in the dataset,
+            this particular combination of ingredients is not part of any recipe in the dataset,
+            or you have not added any ingredients to your query yet.
+        </p>
+    {:else}
     <ul class="list-group" role="list" id="list_ingredientrecs" aria-labelledby="label_ingredientrecs">
         {#each recommendations as rec}
             <li class="list-group-item list-group-item-info list-group-item-action">
@@ -33,4 +40,5 @@
             </li>
         {/each}
     </ul>
+    {/if}
 </div>

@@ -3,7 +3,7 @@
 		const res = await fetch("/recommendations")
 		if(res.ok) {
 			const data = await res.json()
-			return {props: {recommendations: data.result}}
+			return {props: {popular_recommendations: data.rec_popular}}
 		} else {
 			return {
 				status: res.status,
@@ -20,8 +20,8 @@
 
 	export const prerender = true;
 
-	export let popular_recommendations = ""
-	export let nn_recommendations = ""
+	export let popular_recommendations = []
+	export let nn_recommendations = []
 	let ingredients = []
 
 	const updateIngredients = async () => {
