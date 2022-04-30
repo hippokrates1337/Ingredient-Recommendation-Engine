@@ -10,9 +10,11 @@
 </script>
 
 <div class="mt-3">
-    <label class="h6 text-primary mb-2" for="list_ingredientquery" id="label_ingredientquery">
-        Ingredients currently in your query:
-    </label>
+    <div>
+        <label class="h6 text-primary mb-2" for="list_ingredientquery" id="label_ingredientquery">
+            Ingredients currently in your query:
+        </label>
+    </div>
     {#each ingredients as ingredient}
         <span class="badge bg-secondary m-1">
             <div class="row">
