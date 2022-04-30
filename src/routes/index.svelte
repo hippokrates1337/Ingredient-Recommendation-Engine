@@ -3,7 +3,7 @@
 		const res = await fetch("/recommendations")
 		if(res.ok) {
 			const data = await res.json()
-			return {props: {popular_recommendations: data.rec_popular}}
+			return {props: {popular_recommendations: data.rec_popular, allowed_ingredients: data.allowed_ingredients}}
 		} else {
 			return {
 				status: res.status,
@@ -22,6 +22,7 @@
 
 	export let popular_recommendations = []
 	export let nn_recommendations = []
+	export let allowed_ingredients = []
 	let ingredients = []
 
 	const updateIngredients = async () => {
@@ -58,7 +59,7 @@
 	<div class="container bg-light p-3 border border-primary">
 		<div class="row">
 			<div class="col-md-4">
-				<AddIngredient on:add={e => addIngredient(e.detail)} />
+				<AddIngredient {allowed_ingredients} query_ingredients={ingredients} on:add={e => addIngredient(e.detail)} />
 				<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />	
 			</div>
 			<div class="col-md-8">
