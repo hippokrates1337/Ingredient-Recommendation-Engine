@@ -93,34 +93,15 @@
 		<div class="container">
 			<div class="row g-3">
 				<div class="col">
-					<div class="card shadow-sm">
-						<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />
-					</div>
+					<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />
 				</div>
 				<div class="col">
-					<div class="card shadow-sm">
-						
-					</div>
+					<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />
 				</div>
 				<div class="col">
-					<div class="card shadow-sm">
-						
-					</div>
+					<IngredientRecommendations recommendations={nn_recommendations} algorithm="similar recipes" on:add={e => addIngredient(e.detail)} />
 				</div>
 			</div>
-		</div>
-	</div>
-
-	<div class="container bg-light p-3 border border-primary">
-		<div class="row">
-			<div class="col-md-4">
-				
-					
-			</div>
-			<div class="col-md-8">
-				<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />
-				<IngredientRecommendations recommendations={nn_recommendations} algorithm="similar recipes" on:add={e => addIngredient(e.detail)} />
-			</div>			
 		</div>
 	</div>
 </main>
