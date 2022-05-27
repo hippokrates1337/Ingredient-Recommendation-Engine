@@ -17,6 +17,7 @@
 	import AddIngredient from "$lib/AddIngredient.svelte"
 	import IngredientQuery from "$lib/IngredientQuery.svelte"
 	import IngredientRecommendations from "$lib/IngredientRecommendations.svelte"
+	import CategorySelection from "$lib/CategorySelection.svelte"
 
 	export const prerender = true;
 
@@ -24,6 +25,8 @@
 	export let nn_recommendations = []
 	export let allowed_ingredients = []
 	let ingredients = []
+	let filter = "all"
+	let categoriesSelected = []
 
 	const updateIngredients = async () => {
 		let query = "/recommendations/" + ingredients.join("+")
@@ -94,6 +97,7 @@
 			<div class="row g-3">
 				<div class="col">
 					<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />
+					<CategorySelection categories="all" on:filterChange={e => filter = e.detail} on:categoryChange={e => categoriesSelected = e.detail}/>
 				</div>
 				<div class="col">
 					<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />
