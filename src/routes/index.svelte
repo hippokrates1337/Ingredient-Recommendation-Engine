@@ -3,7 +3,7 @@
 		const res = await fetch("/recommendations")
 		if(res.ok) {
 			const data = await res.json()
-			return {props: {popular_recommendations: data.rec_popular, allowed_ingredients: data.allowed_ingredients}}
+			return {props: {popular_recommendations: data["rec_popular"]["recommendations"], numRecipesPopular: data["rec_popular"]["numRecipes"], allowed_ingredients: data.allowed_ingredients}}
 		} else {
 			return {
 				status: res.status,
@@ -17,21 +17,29 @@
 	import AddIngredient from "$lib/AddIngredient.svelte"
 	import IngredientQuery from "$lib/IngredientQuery.svelte"
 	import IngredientRecommendations from "$lib/IngredientRecommendations.svelte"
+	import CategorySelection from "$lib/CategorySelection.svelte"
 
 	export const prerender = true;
 
 	export let popular_recommendations = []
 	export let nn_recommendations = []
 	export let allowed_ingredients = []
+	export let numRecipesPopular = 0
+	let numRecipesNN = 0
 	let ingredients = []
+	let filter = "allCategories"
+	let categoriesSelected = []
 
 	const updateIngredients = async () => {
 		let query = "/recommendations/" + ingredients.join("+")
+		query = query + "--" + filter + "+" + categoriesSelected
 		const res = await fetch(query)
 		if(res.ok) {
 			const data = await res.json()
-			popular_recommendations = data.rec_popular
-			nn_recommendations = data.rec_nn
+			popular_recommendations = data["rec_popular"]["recommendations"]
+			numRecipesPopular = data["rec_popular"]["numRecipes"]
+			nn_recommendations = data["rec_nn"]["recommendations"]
+			numRecipesNN = data["rec_nn"]["numRecipes"]
 		}
 	}
 
@@ -42,6 +50,16 @@
 
 	const removeIngredient = async (ingredient) => {
 		ingredients = ingredients.filter(i => i != ingredient)
+		await updateIngredients()
+	}
+
+	const updateFilter = async (f) => {
+		filter = f
+		await updateIngredients()
+	}
+
+	const updateCategoriesSelected = async (c) => {
+		categoriesSelected = c
 		await updateIngredients()
 	}
 </script>
@@ -94,12 +112,13 @@
 			<div class="row g-3">
 				<div class="col">
 					<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />
+					<CategorySelection categories="allCategories" on:filterChange={e => updateFilter(e.detail)} on:categoryChange={e => updateCategoriesSelected(e.detail)}/>
 				</div>
 				<div class="col">
-					<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />
+					<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" numRecipes={numRecipesPopular} on:add={e => addIngredient(e.detail)} />
 				</div>
 				<div class="col">
-					<IngredientRecommendations recommendations={nn_recommendations} algorithm="similar recipes" on:add={e => addIngredient(e.detail)} />
+					<IngredientRecommendations recommendations={nn_recommendations} algorithm="similar recipes" numRecipes={numRecipesNN} on:add={e => addIngredient(e.detail)} />
 				</div>
 			</div>
 		</div>

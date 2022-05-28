@@ -7,7 +7,7 @@ export const api = async (request) => {
     switch(request.method.toUpperCase()) {
         case "GET":
             let response
-            if(request.params.ing) {
+            if(request.params.ing && request.params.ing.substring(0, 2) != "--") {
                 response = await retrieveRecommendations(request.params.ing)
             } else {
                 response = await retrievePopularIngredients()

@@ -9,7 +9,7 @@
     }
 </script>
 
-<div class="card shadow-sm p-1">
+<div class="card shadow-sm p-1 mb-2">
     <h5 class="card-title text-primary text-center">Your selection</h5>
     <div class="card-body">
         {#if ingredients.length == 0}

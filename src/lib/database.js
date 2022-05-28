@@ -63,38 +63,68 @@ export const retrievePopularIngredients = async () => {
 
     return {
         status: 200,
-        body: {rec_popular: ingredients.slice(0, 10), rec_nn: [], allowed_ingredients: allowed_ingredients}
+        body: {rec_popular: {recommendations: ingredients.slice(0, 10), numRecipes: recipes.length}, rec_nn: [], allowed_ingredients: allowed_ingredients}
     }
 }
 
+const parseQuery = (query) => {
+    // Extract filter settings from query
+    let filters = query.split("--")[1]
+    let categories = []
+
+    if(filters.search("selectedCategories") != -1) {
+        categories = filters.split("+")[1].split(",")
+        filters = filters.split("+")[0]
+    } else {
+        filters = ""
+    }
+
+    // Extract ingredient list from query
+    let ingredients = query.split("--")[0].split("+")
+
+    return {filters: filters, categories: categories, ingredients: ingredients}
+}
+
 export const retrievePopularRecommendations = async (query) => {
-    let ingredients = query.split("+")
+    let params = parseQuery(query)
     
     const dbConnection = await clientPromise
     const db = await dbConnection.db()
     const collection = await db.collection("recipes_ingredients")
-    let recipes = await collection.find({ingredients: {$all: ingredients}}).toArray()
+    
+    let recipes
+    if(params["filters"] != "") {
+        recipes = await collection.find({ingredients: {$all: params["ingredients"]}, predicted_class: {$in: params["categories"]}}).toArray()
+    } else {
+        recipes = await collection.find({ingredients: {$all: params["ingredients"]}}).toArray()
+    }
 
     // Remove the query ingredients from the returned recommendations
     let recommendations = countIngredients(recipes)
-    recommendations = recommendations.filter(r => !ingredients.includes(r[0]))
+    recommendations = recommendations.filter(r => !params["ingredients"].includes(r[0]))
 
-    return recommendations.slice(0, 10)
+    return {recommendations: recommendations.slice(0, 10), numRecipes: recipes.length}
 }
 
 export const retrieveNNRecommendations = async (query) => {
-    let ingredients = query.split("+")
+    let params = parseQuery(query)
 
     const dbConnection = await clientPromise
     const db = await dbConnection.db()
     const collection = await db.collection("recipes_ingredients")
-    let recipes = await collection.find({ingredients: {$all: ingredients}}).toArray()
+    
+    let recipes
+    if(params["filters"] != "") {
+        recipes = await collection.find({ingredients: {$all: params["ingredients"]}, predicted_class: {$in: params["categories"]}}).toArray()
+    } else {
+        recipes = await collection.find({ingredients: {$all: params["ingredients"]}}).toArray()
+    } 
 
     // If there is no recipe that has this combination of ingredients, randomly remove an ingredient and try again
-    let idx = ingredients.length - 1
+    let idx = params["ingredients"].length - 1
     while(recipes.length == 0 && idx > 0) {
         console.log("Trying with less ingredients")
-        recipes = await collection.find({ingredients: {$all: ingredients.slice(0, idx)}}).toArray()
+        recipes = await collection.find({ingredients: {$all: params["ingredients"].slice(0, idx)}}).toArray()
         idx--
     }
 
@@ -104,9 +134,9 @@ export const retrieveNNRecommendations = async (query) => {
     
     // Remove the query ingredients from the returned recommendations
     let recommendations = countIngredients(recipes)
-    recommendations = recommendations.filter(r => !ingredients.includes(r[0]))
+    recommendations = recommendations.filter(r => !params["ingredients"].includes(r[0]))
 
-    return recommendations.slice(0, 10)
+    return {recommendations: recommendations.slice(0, 10), numRecipes: recipes.length}
 }
 
 export const retrieveRecommendations = async (query) => {
