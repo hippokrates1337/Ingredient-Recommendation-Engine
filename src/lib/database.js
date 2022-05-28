@@ -68,7 +68,20 @@ export const retrievePopularIngredients = async () => {
 }
 
 export const retrievePopularRecommendations = async (query) => {
-    let ingredients = query.split("+")
+    // Extract filter settings from query
+    let filters = query.split("--")[1]
+    let categories = []
+
+    if(filters.search("selectedCategories") != -1) {
+        categories = filters.split("+")[1].split(",")
+        filters = filters.split("+")[0]
+    }
+
+    console.log(filters)
+    console.log(categories)
+
+    // Extract ingredient list from query
+    let ingredients = query.split("--")[0].split("+")
     
     const dbConnection = await clientPromise
     const db = await dbConnection.db()

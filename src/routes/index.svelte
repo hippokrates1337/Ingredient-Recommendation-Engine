@@ -25,11 +25,12 @@
 	export let nn_recommendations = []
 	export let allowed_ingredients = []
 	let ingredients = []
-	let filter = "all"
+	let filter = "allCategories"
 	let categoriesSelected = []
 
 	const updateIngredients = async () => {
 		let query = "/recommendations/" + ingredients.join("+")
+		query = query + "--" + filter + "+" + categoriesSelected
 		const res = await fetch(query)
 		if(res.ok) {
 			const data = await res.json()
@@ -45,6 +46,16 @@
 
 	const removeIngredient = async (ingredient) => {
 		ingredients = ingredients.filter(i => i != ingredient)
+		await updateIngredients()
+	}
+
+	const updateFilter = async (f) => {
+		filter = f
+		await updateIngredients()
+	}
+
+	const updateCategoriesSelected = async (c) => {
+		categoriesSelected = c
 		await updateIngredients()
 	}
 </script>
@@ -97,7 +108,7 @@
 			<div class="row g-3">
 				<div class="col">
 					<IngredientQuery {ingredients} on:remove={e => removeIngredient(e.detail)} />
-					<CategorySelection categories="all" on:filterChange={e => filter = e.detail} on:categoryChange={e => categoriesSelected = e.detail}/>
+					<CategorySelection categories="allCategories" on:filterChange={e => updateFilter(e.detail)} on:categoryChange={e => updateCategoriesSelected(e.detail)}/>
 				</div>
 				<div class="col">
 					<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" on:add={e => addIngredient(e.detail)} />

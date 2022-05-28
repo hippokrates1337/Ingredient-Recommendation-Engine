@@ -26,15 +26,15 @@
     <h5 class="card-title text-primary text-center">Recipe categories considered</h5>
     <div class="card-body">
         <div class="form-check border border-primary rounded">
-            <input type="radio" bind:group={categories} on:change={onFilterChange} name="categories" value={"all"} id="allCategories" checked>
+            <input type="radio" bind:group={categories} on:change={onFilterChange} name="categories" value={"allCategories"} id="allCategories" checked>
             <label for="allCategories">All</label>
         </div>
         <div class="form-check border border-primary rounded">
-            <input type="radio" bind:group={categories} on:change={onFilterChange} name="categories" value={"selected"} id="selectedCategories">
+            <input type="radio" bind:group={categories} on:change={onFilterChange} name="categories" value={"selectedCategories"} id="selectedCategories">
             <label for="selectedCategories">Selected only</label>
             {#each categoryNames as cat}
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" bind:group={categoriesSelected} on:change={onCategoryChange} name="categoriesSelected" value={cat["name"]} id={cat["name"]} disabled={categories == "all"} />
+                    <input class="form-check-input" type="checkbox" bind:group={categoriesSelected} on:change={onCategoryChange} name="categoriesSelected" value={cat["name"]} id={cat["name"]} disabled={categories == "allCategories"} />
                     <label class="form-check-label" for={cat["name"]}>{cat["label"]}</label>
                 </div>
             {/each}
