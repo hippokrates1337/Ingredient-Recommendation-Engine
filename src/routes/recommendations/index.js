@@ -1,5 +1,5 @@
 import {api} from "./_api"
 
-export const get = (request) => {
+export const get = async (request) => {
     return api(request);
 }

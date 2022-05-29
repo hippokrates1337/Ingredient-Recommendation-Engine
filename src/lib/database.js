@@ -52,8 +52,8 @@ export const retrievePopularIngredients = async () => {
     const dbConnection = await clientPromise
     const db = await dbConnection.db()
     const collection = await db.collection("recipes_ingredients")
-    let recipes = await collection.find({}).toArray()
 
+    let recipes = await collection.find({}).toArray()
     if(recipes.length === 0) {
         return {status: 500, body: {}}
     }
@@ -99,8 +99,8 @@ export const retrievePopularRecommendations = async (query) => {
         recipes = await collection.find({ingredients: {$all: params["ingredients"]}}).toArray()
     }
 
-    // Remove the query ingredients from the returned recommendations
     let recommendations = countIngredients(recipes)
+    // Remove the query ingredients from the returned recommendations
     recommendations = recommendations.filter(r => !params["ingredients"].includes(r[0]))
 
     return {recommendations: recommendations.slice(0, 10), numRecipes: recipes.length}
@@ -140,11 +140,11 @@ export const retrieveNNRecommendations = async (query) => {
 }
 
 export const retrieveRecommendations = async (query) => {
-    let rec_1 = await retrievePopularRecommendations(query)
-    let rec_2 = await retrieveNNRecommendations(query)
+    let rec1 = await retrievePopularRecommendations(query)
+    let rec2 = await retrieveNNRecommendations(query)
     
     return {
         status: 200,
-        body: {recPopular: rec_1, rec_nn: rec_2, allowedIngredients: []}
+        body: {recPopular: rec1, recNN: rec2}
     }
 }

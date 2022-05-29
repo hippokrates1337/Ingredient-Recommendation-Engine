@@ -13,15 +13,15 @@
 
 <div class="card shadow-sm p-1">
     <h5 class="card-title text-primary text-center"> Recommendations ({algorithm})</h5>
-    <p class="text-muted text-center small">Based on {numRecipes} recipes</p>
+    <p class="text-muted text-center small">Based on {numRecipes.toLocaleString("en-IN")} recipes</p>
     <div class="card-body">
         {#if recommendations.length == 0}
             <p class="text-muted">No recommendations available
             </p>
         {:else}
-        <ul class="list-group" role="list" id="list_ingredientrecs" aria-labelledby="label_ingredientrecs">
+        <ul class="list-group list-group-flush" role="list" id="list_ingredientrecs" aria-labelledby="label_ingredientrecs">
             {#each recommendations as rec}
-                <li class="list-group-item list-group-item-info list-group-item-action">
+                <li class="list-group-item list-group-item-action">
                     <div class="row">
                         <div class="col-md-10 my-auto">
                             {rec[0]}

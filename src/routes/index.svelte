@@ -3,7 +3,7 @@
 		const res = await fetch("/ingredients")
 		if(res.ok) {
 			const data = await res.json()
-			return {props: {popularRecommendations: data["recommendations"], numRecipesPopular: ["numRecipes"], allowedIngredients: data["allowedIngredients"]}}
+			return {props: {popularRecommendations: data["recommendations"], numRecipesPopular: data["numRecipes"], allowedIngredients: data["allowedIngredients"]}}
 		} else {
 			return {
 				status: res.status,
@@ -22,7 +22,7 @@
 	export const prerender = true;
 
 	export let popularRecommendations = []
-	export let nn_recommendations = []
+	export let nnRecommendations = []
 	export let allowedIngredients = []
 	export let numRecipesPopular = 0
 	let numRecipesNN = 0
@@ -38,8 +38,8 @@
 			const data = await res.json()
 			popularRecommendations = data["recPopular"]["recommendations"]
 			numRecipesPopular = data["recPopular"]["numRecipes"]
-			nn_recommendations = data["rec_nn"]["recommendations"]
-			numRecipesNN = data["rec_nn"]["numRecipes"]
+			nnRecommendations = data["recNN"]["recommendations"]
+			numRecipesNN = data["recNN"]["numRecipes"]
 		}
 	}
 
@@ -118,7 +118,7 @@
 					<IngredientRecommendations recommendations={popularRecommendations} algorithm="popularity" numRecipes={numRecipesPopular} on:add={e => addIngredient(e.detail)} />
 				</div>
 				<div class="col">
-					<IngredientRecommendations recommendations={nn_recommendations} algorithm="similar recipes" numRecipes={numRecipesNN} on:add={e => addIngredient(e.detail)} />
+					<IngredientRecommendations recommendations={nnRecommendations} algorithm="similar recipes" numRecipes={numRecipesNN} on:add={e => addIngredient(e.detail)} />
 				</div>
 			</div>
 		</div>
