@@ -2,13 +2,13 @@
     import {createEventDispatcher} from "svelte"
     const dispatch = createEventDispatcher()
 
-    export let allowed_ingredients
+    export let allowedIngredients
     export let query_ingredients
     let ingredient
     let errorMsg = ""
 
     const onAdd = () => {
-        if(!allowed_ingredients.includes(ingredient)) {
+        if(!allowedIngredients.includes(ingredient)) {
             errorMsg = "Ingredient not contained in database"
         } else if(query_ingredients.includes(ingredient)) {
             errorMsg = "Ingredient already in your query"

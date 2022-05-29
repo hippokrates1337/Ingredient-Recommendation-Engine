@@ -59,11 +59,11 @@ export const retrievePopularIngredients = async () => {
     }
 
     let ingredients = countIngredients(recipes)
-    let allowed_ingredients = ingredients.map((ing) => ing[0])
+    let allowedIngredients = ingredients.map((ing) => ing[0])
 
     return {
         status: 200,
-        body: {rec_popular: {recommendations: ingredients.slice(0, 10), numRecipes: recipes.length}, rec_nn: [], allowed_ingredients: allowed_ingredients}
+        body: {recommendations: ingredients.slice(0, 10), numRecipes: recipes.length, allowedIngredients: allowedIngredients}
     }
 }
 
@@ -145,6 +145,6 @@ export const retrieveRecommendations = async (query) => {
     
     return {
         status: 200,
-        body: {rec_popular: rec_1, rec_nn: rec_2, allowed_ingredients: []}
+        body: {recPopular: rec_1, rec_nn: rec_2, allowedIngredients: []}
     }
 }

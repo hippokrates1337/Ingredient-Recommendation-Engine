@@ -1,4 +1,4 @@
-import {retrieveRecommendations} from "$lib/database"
+import {retrievePopularIngredients} from "$lib/database"
 
 export const api = async (request) => {
     let status = 500
@@ -6,8 +6,8 @@ export const api = async (request) => {
 
     switch(request.method.toUpperCase()) {
         case "GET":
-            let response = await retrieveRecommendations(request.params.ing)
-
+            let response = await retrievePopularIngredients()
+            
             body = response.body
             status = response.status;
             break;
