@@ -1,9 +1,9 @@
 <script context="module">	
 	export async function load({fetch}) {
-		const res = await fetch("/recommendations")
+		const res = await fetch("/ingredients")
 		if(res.ok) {
 			const data = await res.json()
-			return {props: {popular_recommendations: data["rec_popular"]["recommendations"], numRecipesPopular: data["rec_popular"]["numRecipes"], allowed_ingredients: data.allowed_ingredients}}
+			return {props: {popularRecommendations: data["recommendations"], numRecipesPopular: ["numRecipes"], allowedIngredients: data["allowedIngredients"]}}
 		} else {
 			return {
 				status: res.status,
@@ -21,9 +21,9 @@
 
 	export const prerender = true;
 
-	export let popular_recommendations = []
+	export let popularRecommendations = []
 	export let nn_recommendations = []
-	export let allowed_ingredients = []
+	export let allowedIngredients = []
 	export let numRecipesPopular = 0
 	let numRecipesNN = 0
 	let ingredients = []
@@ -36,8 +36,8 @@
 		const res = await fetch(query)
 		if(res.ok) {
 			const data = await res.json()
-			popular_recommendations = data["rec_popular"]["recommendations"]
-			numRecipesPopular = data["rec_popular"]["numRecipes"]
+			popularRecommendations = data["recPopular"]["recommendations"]
+			numRecipesPopular = data["recPopular"]["numRecipes"]
 			nn_recommendations = data["rec_nn"]["recommendations"]
 			numRecipesNN = data["rec_nn"]["numRecipes"]
 		}
@@ -102,7 +102,7 @@
 	<section class="py-5 text-center container">
 		<div class="row py-lg-5">
 			<div class="col-lg-6 col-md-8 mx-auto">
-				<AddIngredient {allowed_ingredients} query_ingredients={ingredients} on:add={e => addIngredient(e.detail)} />
+				<AddIngredient {allowedIngredients} query_ingredients={ingredients} on:add={e => addIngredient(e.detail)} />
 			</div>
 		</div>
 	</section>
@@ -115,7 +115,7 @@
 					<CategorySelection categories="allCategories" on:filterChange={e => updateFilter(e.detail)} on:categoryChange={e => updateCategoriesSelected(e.detail)}/>
 				</div>
 				<div class="col">
-					<IngredientRecommendations recommendations={popular_recommendations} algorithm="popularity" numRecipes={numRecipesPopular} on:add={e => addIngredient(e.detail)} />
+					<IngredientRecommendations recommendations={popularRecommendations} algorithm="popularity" numRecipes={numRecipesPopular} on:add={e => addIngredient(e.detail)} />
 				</div>
 				<div class="col">
 					<IngredientRecommendations recommendations={nn_recommendations} algorithm="similar recipes" numRecipes={numRecipesNN} on:add={e => addIngredient(e.detail)} />
